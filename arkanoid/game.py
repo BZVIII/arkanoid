@@ -13,7 +13,7 @@ class Game():
         i = 0
 
         while True:
-            swQuit = self.escenas[i].bucle_principal()
+            self.escenas[i].bucle_principal()
             i += 1
             if i == len(self.escenas):
                 i = 0
