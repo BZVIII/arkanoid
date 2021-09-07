@@ -47,14 +47,14 @@ class Partida(Escena):
     def bucle_principal(self):
         vidas = 3
         while vidas > 0:
-            self.reloj.tick(FPS)
+            dt = self.reloj.tick(FPS)
             for evento in pg.event.get():
                 if evento.type == pg.QUIT:
                     exit()
 
-            self.player.update()
+            self.player.update(dt)
             
-            self.bola.update()
+            self.bola.update(dt)
             self.bola.comprobar_colision(self.player)
             
             if not self.bola.viva:

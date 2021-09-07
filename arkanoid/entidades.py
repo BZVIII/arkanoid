@@ -1,14 +1,22 @@
 import pygame as pg
 from pygame.sprite import Sprite
-from . import ANCHO, ALTO
+from . import ANCHO, ALTO, FPS
 
 class Raqueta(Sprite):
-    disfraces = "electric00.png"
+    disfraces = ["electric00.png", "electric01.png", "electric02.png"]
     def __init__(self, **kwargs):
-        self.image = pg.image.load(f"resources/images/{self.disfraces}")
+        self.imagenes = []
+        for nombre in self.disfraces:
+            self.imagenes.append(pg.image.load(f"resources/images/{nombre}"))
+        self.imagen_activa = 0
+
+        self.tiempo_transcurrido = 0
+        self.tiempo_hasta_cambio_disfraz = 1000 // FPS * 60
+        
+        self.image = self.imagenes[self.imagen_activa]
         self.rect = self.image.get_rect(**kwargs)
 
-    def update(self):
+    def update(self, dt):
         if pg.key.get_pressed()[pg.K_LEFT]:
             self.rect.x -= 5
 
@@ -21,6 +29,17 @@ class Raqueta(Sprite):
         if self.rect.right >= ANCHO:
             self.rect.right = ANCHO
 
+        self.tiempo_transcurrido += dt
+        if self.tiempo_transcurrido >= self.tiempo_hasta_cambio_disfraz:
+            self.imagen_activa += 1
+            if self.imagen_activa >= len(self.imagenes):
+                self.imagen_activa = 0
+
+            self.tiempo_transcurrido = 0
+
+        self.image = self.imagenes[self.imagen_activa]
+        
+
 
 class Bola(Sprite):
     disfraces = "ball1.png"
@@ -32,7 +51,7 @@ class Bola(Sprite):
         self.viva = True
         self.posicion_inicial = kwargs
 
-    def update(self, raqueta):
+    def update(self, dt):
         self.rect.x += self.delta_x
         if self.rect.x <=0 or self.rect.right >= ANCHO:
             self.delta_x *= -1
