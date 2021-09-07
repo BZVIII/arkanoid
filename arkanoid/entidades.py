@@ -14,8 +14,13 @@ class Raqueta(Sprite):
         self.tiempo_transcurrido = 0
         self.tiempo_hasta_cambio_disfraz = 1000 // FPS * 5
         
+        self.posicion_inicial = kwargs
         self.image = self.imagenes[self.imagen_activa]
         self.rect = self.image.get_rect(**kwargs)
+
+
+    def reset(self):
+        self.rect = self.image.get_rect(**self.posicion_inicial)
 
     def update(self, dt):
         if pg.key.get_pressed()[pg.K_LEFT]:
@@ -85,4 +90,26 @@ class Ladrillo(Sprite):
         self.rect = self.image.get_rect(x=x, y=y)
 
 
+class Marcador(Sprite):
+    def __init__(self, x, y, fichero_letra, tamanyo, color):
+        super().__init__()
+        self._texto = ""
+        self.x = x
+        self.y = y
+        self.color = color
+        self.fuente = pg.font.Font(f"resources/fonts/{fichero_letra}", tamanyo)
+        self.image = self.fuente.render(self._texto, True, self.color)
+        self.rect = self.image.get_rect(x=self.x, y=self.y)
 
+    def update(self, dt):
+        self.image = self.fuente.render(self._texto, True, self.color)
+        self.rect = self.image.get_rect(x=self.x, y=self.y)
+
+    @property
+    def texto(self):
+        return self._texto
+
+    @texto.setter
+    def texto(self, valor):
+        self._texto = str(valor)
+    
