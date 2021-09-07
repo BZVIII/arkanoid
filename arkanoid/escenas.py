@@ -44,6 +44,7 @@ class Partida(Escena):
         self.todos = pg.sprite.Group()
         self.player = Raqueta(midbottom=(ANCHO // 2, ALTO - 15) )
         self.bola = Bola(center = (ANCHO // 3, ALTO // 2 - 200))
+        self.puntos = 0
 
         self.ladrillos = pg.sprite.Group()
         for f in range(3):
@@ -62,23 +63,23 @@ class Partida(Escena):
                     exit()
 
             self.todos.update(dt)
+
             self.bola.comprobar_colision(self.player)
-            for ladrillo in self.ladrillos:
-                if self.bola.comprobar_colision(ladrillo):
-                    pass
-                    #quitar el ladrillo de la lista self.ladrillos
-                    #aulmentar la puntuacion
+
+            tocados = pg.sprite.spritecollide(self.bola, self.ladrillos, True)
+            if len(tocados) > 0:
+                self.bola.delta_y *= -1
+                self.puntos += len(tocados) * 5
+                print(self.puntos)
+
             
             if not self.bola.viva:
                 vidas -= 1
                 self.bola.viva = True
 
             self.pantalla.blit(self.fondo, (0, 0))
-            self.pantalla.blit(self.player.image, self.player.rect)
-            self.pantalla.blit(self.bola.image, self.bola.rect)
+            self.todos.draw(self.pantalla)
 
-            for ladrillo in self.ladrillos:
-                self.pantalla.blit(ladrillo.image, ladrillo.rect)
 
             pg.display.flip()
 

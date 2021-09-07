@@ -5,6 +5,7 @@ from . import ANCHO, ALTO, FPS
 class Raqueta(Sprite):
     disfraces = ["electric00.png", "electric01.png", "electric02.png"]
     def __init__(self, **kwargs):
+        super().__init__()
         self.imagenes = []
         for nombre in self.disfraces:
             self.imagenes.append(pg.image.load(f"resources/images/{nombre}"))
@@ -40,10 +41,10 @@ class Raqueta(Sprite):
         self.image = self.imagenes[self.imagen_activa]
         
 
-
 class Bola(Sprite):
     disfraces = "ball1.png"
     def __init__(self, **kwargs):
+        super().__init__()
         self.image = pg.image.load(f"resources/images/{self.disfraces}")
         self.rect = self.image.get_rect(**kwargs)
         self.delta_x = 5
@@ -79,8 +80,9 @@ class Bola(Sprite):
 class Ladrillo(Sprite):
     disfraces = "greenTile.png"
     def __init__(self, x=5, y=5):
+        super().__init__()
         self.image = pg.image.load(f"resources/images/{self.disfraces}")
         self.rect = self.image.get_rect(x=x, y=y)
 
-        
+
 
