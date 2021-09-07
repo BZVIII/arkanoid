@@ -1,6 +1,6 @@
 import pygame as pg
 from . import FPS, ANCHO, ALTO
-from .entidades import Raqueta, Bola
+from .entidades import Raqueta, Bola, Ladrillo
 
 class Escena():
     def __init__(self, pantalla):
@@ -41,8 +41,17 @@ class Partida(Escena):
     def __init__(self, pantalla):
         super().__init__(pantalla)
         self.fondo =pg.image.load("resources/images/background.jpg")
+        self.todos = pg.sprite.Group()
         self.player = Raqueta(midbottom=(ANCHO // 2, ALTO - 15) )
         self.bola = Bola(center = (ANCHO // 3, ALTO // 2 - 200))
+
+        self.ladrillos = pg.sprite.Group()
+        for f in range(3):
+            for c in range(6):
+                ladrillo = Ladrillo(c * 90 + 30, f * 30 + 10)
+                self.ladrillos.add(ladrillo)
+
+        self.todos.add(self.ladrillos, self.bola, self.player)
 
     def bucle_principal(self):
         vidas = 3
@@ -52,10 +61,13 @@ class Partida(Escena):
                 if evento.type == pg.QUIT:
                     exit()
 
-            self.player.update(dt)
-            
-            self.bola.update(dt)
+            self.todos.update(dt)
             self.bola.comprobar_colision(self.player)
+            for ladrillo in self.ladrillos:
+                if self.bola.comprobar_colision(ladrillo):
+                    pass
+                    #quitar el ladrillo de la lista self.ladrillos
+                    #aulmentar la puntuacion
             
             if not self.bola.viva:
                 vidas -= 1
@@ -64,6 +76,10 @@ class Partida(Escena):
             self.pantalla.blit(self.fondo, (0, 0))
             self.pantalla.blit(self.player.image, self.player.rect)
             self.pantalla.blit(self.bola.image, self.bola.rect)
+
+            for ladrillo in self.ladrillos:
+                self.pantalla.blit(ladrillo.image, ladrillo.rect)
+
             pg.display.flip()
 
 

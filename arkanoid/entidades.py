@@ -11,7 +11,7 @@ class Raqueta(Sprite):
         self.imagen_activa = 0
 
         self.tiempo_transcurrido = 0
-        self.tiempo_hasta_cambio_disfraz = 1000 // FPS * 60
+        self.tiempo_hasta_cambio_disfraz = 1000 // FPS * 5
         
         self.image = self.imagenes[self.imagen_activa]
         self.rect = self.image.get_rect(**kwargs)
@@ -62,14 +62,25 @@ class Bola(Sprite):
 
         if self.rect.bottom >= ALTO:
             self.viva = False
-            self.rect = self.image.get_rect(**self.posicion_inicial)
+            self.reset()
 
- 
+    def reset(self):
+        self.rect = self.image.get_rect(**self.posicion_inicial)
+        self.delta_x = 5
+        self.delta_y = 5
+
+
     def comprobar_colision(self, otro):
         if self.rect.right >= otro.rect.left and self.rect.left <= otro.rect.right and \
            self.rect.bottom >= otro.rect.top and self.rect.top <= otro.rect.bottom:
            self.delta_y *= -1
 
 
+class Ladrillo(Sprite):
+    disfraces = "greenTile.png"
+    def __init__(self, x=5, y=5):
+        self.image = pg.image.load(f"resources/images/{self.disfraces}")
+        self.rect = self.image.get_rect(x=x, y=y)
 
+        
 
